@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Wish;
+use App\Form\WishType;
 use App\Repository\WishRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 /**
@@ -36,42 +38,23 @@ class WishController extends AbstractController
     /**
      * @Route("/create", name="create")
      */
-    public function create(EntityManagerInterface $entityManager): Response
+    public function create(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $wish1 = new Wish();
+        $wish = new Wish();
+        $wish->setIsPublished(true);
+        $wish->setDateCreated(new \DateTime());
 
-        $wish1->setTitle('Premiere idee');
-        $wish1->setAuthor('Moi');
-        $wish1->setDescription('Une idée comme ça');
-        $wish1->setIsPublished(true);
-        $wish1->setDateCreated(new \DateTime());
+        $wishForm = $this->createForm(WishType::class,$wish);
 
-        $entityManager->persist($wish1);
+        $wishForm->handleRequest($request);
 
-        $wish2 = new Wish();
-
-        $wish2->setTitle('Deuxième idee');
-        $wish2->setAuthor('Un autre');
-        $wish2->setDescription('Une autre idée comme ça');
-        $wish2->setIsPublished(true);
-        $wish2->setDateCreated(new \DateTime('- 5 day'));
-
-        $entityManager->persist($wish2);
-
-
-        $wish3 = new Wish();
-
-        $wish3->setTitle('Troisième idee');
-        $wish3->setAuthor('Encore un autre');
-        $wish3->setDescription('Une autre idée de plus comme ça');
-        $wish3->setIsPublished(true);
-        $wish3->setDateCreated(new \DateTime('- 5 week'));
-
-        $entityManager->persist($wish3);
-
-        $entityManager->flush();
-
-        return $this->render('wish/create.html.twig');
+        if($wishForm->isSubmitted() && $wishForm->isValid()){
+            $entityManager->persist($wish);
+            $entityManager->flush();
+            $this->addFlash('success', 'Idea successfully added!');
+            return $this->redirectToRoute('wish_detail', ['id'=>$wish->getId()]);
+        }
+        return $this->render('wish/create.html.twig', ['wishForm'=>$wishForm->createView()]);
     }
 
 

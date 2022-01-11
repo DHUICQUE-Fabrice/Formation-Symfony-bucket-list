@@ -5,6 +5,11 @@ Create a new wish | {{ parent() }}
 {% endblock %}
 
 {% block body %}
- todo : make a form to create a wish
+ <div class="form form-control">
+ {{ form_start(wishForm) }}
+ {{ form_widget(wishForm) }}
+ <button>Submit</button>
+ {{ form_end(wishForm) }}
+ </div>
 {% endblock %}
 

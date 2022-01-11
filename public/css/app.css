@@ -80,3 +80,26 @@ li a {
     padding: 14px 16px;
     text-decoration: none;
 }
+
+label{
+    display: block;
+}
+input, textarea{
+    margin: 10px;
+    box-sizing: border-box;
+    width: 300px;
+    max-width: 50%;
+}
+
+.flash{
+    padding: 20px;
+    font-weight: bold;
+    font-size: 1.4rem;
+    margin: 150px;
+    border-radius: 5px;
+}
+
+.flash-success{
+    color: white;
+    background-color: darkgreen;
+}
