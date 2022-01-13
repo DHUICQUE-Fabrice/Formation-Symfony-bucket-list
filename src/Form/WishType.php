@@ -16,9 +16,12 @@ class WishType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+
             ->add('title', TextType::class, ['label'=>'Your idea'])
             ->add('description', TextareaType::class, ['label'=>'Please describe it!'])
-            ->add('author', null, ['label'=>'Your username'])
+            ->add('author', null, [
+                'label'=>'Your username',
+            ])
             ->add('category', EntityType::class,[
                 'class'=>Category::class,
                 'choice_label'=>'name',
